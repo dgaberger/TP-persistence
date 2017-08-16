@@ -7,6 +7,7 @@ var Place = require("./models").Place;
 var Hotel = require("./models").Hotel;
 var Restaurant = require("./models").Restaurant;
 var Activity = require("./models").Activity;
+var Itinerary = require('./models').Itinerary;
 
 var data = {
   hotel: [
@@ -537,9 +538,10 @@ var data = {
         phone: "123-456-7890",
         location: [-73.99087, 40.733274]
       },
-      age_range: "All"
+      age_range: "All",
     }
-  ]
+  ],
+  itinerary: [{}, {}]
 };
 
 db
@@ -548,9 +550,15 @@ db
     console.log("Dropped old data, now inserting data");
     return Promise.map(Object.keys(data), function(name) {
       return Promise.map(data[name], function(item) {
-        return db.model(name).create(item, {
-          include: [Place]
-        });
+        if (name === 'itinerary'){
+          return db.model(name).create(item, {
+            //include: [Hotel, Activity, Restaurant]
+          });
+        } else {
+          return db.model(name).create(item, {
+            include: [Place]
+          });
+        }
       });
     });
   })
@@ -565,3 +573,5 @@ db
     console.log("connection closed"); // the connection eventually closes, we just manually do so to end the process quickly
     return null; // silences bluebird warning about using non-returned promises inside of handlers.
   });
+
+

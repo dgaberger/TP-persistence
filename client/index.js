@@ -2,6 +2,7 @@ const mapboxgl = require("mapbox-gl");
 const buildMarker = require("./marker");
 const attractions = require("./attractions");
 
+
 /*
  * App State
  */
@@ -30,7 +31,7 @@ const map = new mapboxgl.Map({
   * Populate the list of attractions
   */
 
-attractions.load().then(list => {
+attractions.load('/api').then(list => {
   list.hotels.forEach(attraction => makeOption(attraction, "hotels-choices"));
   list.restaurants.forEach(attraction => makeOption(attraction, "restaurants-choices"));
   list.activities.forEach(attraction => makeOption(attraction, "activities-choices"));
@@ -124,4 +125,29 @@ function removeAttractionFromDOM(category, attractionData) {
 
   // Animate map to default position & zoom.
   map.flyTo({ center: [-74.0, 40.731], zoom: 12.3 });
+}
+
+// fetching for Itineraries
+
+let list2 = {};
+
+const load2 = (route) => {
+  return fetch(route)
+    .then(result => result.json())
+    .then(loadedAttractions => {
+      list2 = loadedAttractions;
+      return list2;
+    })
+    .catch(console.error);
+};
+
+if(location.hash){
+  console.log('hash is not null')
+  console.log('/api/itineraries/' + location.hash.slice(1))
+  load2('/api/itineraries/' + location.hash.slice(1)).then(list2 => {
+    console.log('getting? ', list2.hotels)
+    // list2.hotels.forEach(attraction => makeOption(attraction, "hotels-choices"));
+    // list2.restaurants.forEach(attraction => makeOption(attraction, "restaurants-choices"));
+    // list2.activities.forEach(attraction => makeOption(attraction, "activities-choices"));
+  });
 }

@@ -29,13 +29,11 @@ app.use(function(req, res, next) {
 app.use(function(err, req, res, next) {
   console.error(err, err.stack);
   res.status(err.status || 500);
-  res.render("error", {
-    error: err
-  });
+  res.send("error: " + err);
 });
 
 // listen on a port
-var port = 3000;
+var port = 3003;
 app.listen(port, function() {
   console.log("The server is listening closely on port", port);
   db

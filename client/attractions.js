@@ -1,7 +1,7 @@
 let list = {};
 
-const load = () => {
-  return fetch("/api")
+const load = (route) => {
+  return fetch(route)
     .then(result => result.json())
     .then(loadedAttractions => {
       list = loadedAttractions;
